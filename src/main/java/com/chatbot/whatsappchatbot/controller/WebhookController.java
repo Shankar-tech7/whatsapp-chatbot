@@ -9,12 +9,20 @@ import java.util.Map;
 public class WebhookController {
 
     @PostMapping
-    public Map<String, String> receiveMessage(@RequestBody Map<String, String> request) {
+    public Map<String, Object> receiveMessage(@RequestBody Map<String, Object> request) {
 
-        String message = request.get("message");
+        // 🔹 Log full incoming JSON
+        System.out.println("Incoming request: " + request);
+
+        // 🔹 Extract message safely
+        String message = request.get("message") != null
+                ? request.get("message").toString()
+                : null;
+
         String reply;
 
-        if (message == null) {
+        // 🔹 Business logic
+        if (message == null || message.trim().isEmpty()) {
             reply = "Invalid message";
         } else if (message.equalsIgnoreCase("hi")) {
             reply = "Hello";
@@ -24,10 +32,13 @@ public class WebhookController {
             reply = "I don't understand";
         }
 
-        System.out.println("Incoming message: " + message);
-
-        Map<String, String> response = new HashMap<>();
+        // 🔹 Prepare response
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
         response.put("reply", reply);
+
+        // 🔹 Log outgoing response
+        System.out.println("Response: " + response);
 
         return response;
     }
