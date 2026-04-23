@@ -5,5 +5,6 @@ RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:17-jdk
 WORKDIR /app
-COPY --from=build /app/target/whatsapp-chatbot-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /app/target/*.jar app.jar
+RUN ls -l /app
 ENTRYPOINT ["java","-jar","/app.jar"]
